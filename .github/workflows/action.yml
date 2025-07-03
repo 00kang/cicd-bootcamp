@@ -17,10 +17,29 @@ jobs:
       - name: run lint
         run: npm run lint
 
-  # Job 2: 빌드 작업
+  # Job 2: 테스트 실행 작업 (lint와 병렬 실행)
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: 저장소 코드 다운로드 (각 job마다 독립적으로 필요)
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: 의존성 설치
+      - name: install dependencies
+        run:
+          npm ci # package-lock.json을 기반으로 정확한 버전의 패키지 설치
+          # Jest, Testing Library 등 테스트 도구들 설치
+
+      # Step 3: 테스트 실행
+      - name: run test
+        run: npm run test # Jest 등을 통한 단위 테스트, 통합 테스트 실행
+
+  # Job 3: 빌드 작업 (lint와 test 모두 완료 후 실행)
   build:
     runs-on: ubuntu-latest
-    needs: lint # lint job이 성공적으로 완료된 후에만 실행
+    needs: [lint, test] # lint와 test job이 모두 성공적으로 완료된 후에만 실행
     steps:
       # Step 1: 저장소 코드 다운로드
       - name: checkout code
@@ -33,3 +52,5 @@ jobs:
       # Step 3: 프로덕션 빌드 실행
       - name: run build
         run: npm run build # package.json의 build 스크립트 실행
+
+
