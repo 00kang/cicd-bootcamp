@@ -6,7 +6,7 @@ jobs:
     steps:
       # Step 1: 저장소 코드 다운로드
       - name: Checkout Code
-        uses:actions/checkout@v4 # 저장소의 모든 파일을 가상머신으로 복사      
+        uses: actions/checkout@v4 # 저장소의 모든 파일을 가상머신으로 복사
 
       # Step 2: Node.js 의존성 설치
       - name: install deps
